@@ -1,0 +1,118 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Soru Listesi{% endblock %}
+{% block pageTitle %}Soru Listesi{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+
+        <!--Default Data Table Start-->
+        <div class="col-12 mb-30">
+            <div class="box">
+                <div class="box-body">
+
+                    <table class="table table-bordered data-table data-table-default">
+                        <thead>
+                        <tr>
+                            <th>Sıra</th>
+                            <th>Soru</th>
+                            <th>Rastgele Soru <span class="text-primary" data-toggle="tooltip" data-title="Bu soru rastgele olarak başvuranlara gösterilen sorulardan mı?">(?)</span></th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for question in questions %}
+                            {% if question.textQuestion != null %}
+                                {% set questionText = question.textQuestion.text %}
+                                {% set questionTypeText = 'Metin Sorusu' %}
+                            {% else %}
+                                {% set questionText = question.choiceQuestion.text %}
+                                {% set questionTypeText = 'Çoktan Seçmeli Soru' %}
+                            {% endif %}
+                            <tr>
+                                <td>{{ question.sort }}</td>
+                                <td style="white-space: normal">
+                                    <small>{{ questionTypeText }}</small><br />
+                                    {{ questionText }}
+                                </td>
+                                <td>
+                                    <label class="adomx-checkbox primary"><input class="random-question" data-question-id="{{ question.id }}" type="checkbox"{% if question.random == 1 %} checked=""{% endif %}> <i class="icon"></i></label>
+                                </td>
+                                <td>{{ question.status ? '<span class="text-success">Yayında</span>' : '<span class="text-danger">Yayında Değil</span>' }}</td>
+                                <td>
+                                    {% if not question.status %}
+                                        <a class="button button-sm button-success" href="{{ path('question_active', {'id': question.id}) }}">Yayına Al</a>
+                                    {% else %}
+                                        <a class="button button-sm button-warning" href="{{ path('question_deactive', {'id': question.id}) }}">Yayından Kaldır</a>
+                                    {% endif %}
+                                    <a class="button button-sm button-danger" href="{{ path('question_delete', {'id': question.id}) }}">Sil</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!--Default Data Table End-->
+
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    <script src="/static/admin/assets/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+        let $randomElm = $('input.random-question');
+
+        $randomElm.on('change', function(e) {
+
+            $randomElm.prop('disabled', true);
+
+            let $questionId = $(this).data('question-id');
+            let $isRandom = $(this).is(':checked');
+            let data = { questionId: $questionId, random: $isRandom };
+            let that = $(this);
+
+            fetch('{{ path('question_update_random') }}', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        swal({
+                            title: "Bir hata oluştu!",
+                            text: data.errorMessage,
+                            icon: "error",
+                            button: {
+                                text: "Kapat",
+                                value: true,
+                                visible: true,
+                                className: "button button-danger",
+                                closeModal: true,
+                            }
+                        });
+                        that.prop('checked', false);
+                    }
+                    $randomElm.prop('disabled', false);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    $randomElm.prop('disabled', false);
+                });
+
+        });
+
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kafi RP Ticket{% endblock %}
+
+{% block body %}
+    <div class="form-content flex-fill">
+        <div class="form-items" style="max-width: 100%">
+            <h3>KafiRP Destek</h3>
+            {% include 'ticket/_header.html.twig' with {activeRoute: 'ticket_create'} %}
+
+            {% if success is defined and success == true %}
+                <div class="alert alert-success">
+                    <p class="m-0 p-0">Destek talebiniz başarıyla oluşturulmuştur.</p>
+                </div>
+            {% else %}
+                {{ form(form) }}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+
+    </script>
+{% endblock %}

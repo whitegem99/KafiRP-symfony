@@ -1,0 +1,166 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Başvuru Listesi{% endblock %}
+{% block pageTitle %}Başvuru Listesi{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+
+        <!--Default Data Table Start-->
+        <div class="col-12 mb-30">
+            <div class="box">
+                <div class="box-body">
+
+                    {% set successMessages = app.session.flashBag.get('success') %}
+                    {% set errorMessages = app.session.flashBag.get('error') %}
+
+                    {% if successMessages|length > 0 %}
+                        {% for message in successMessages %}
+                        <p class="alert alert-success">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if errorMessages|length > 0 %}
+                        {% for message in errorMessages %}
+                            <p class="alert alert-danger">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    <table class="table table-bordered data-table data-table-default">
+                        <thead>
+                        <tr>
+                            <th>Üye</th>
+                            <th>Başvuru Tarihi</th>
+                            <th>İncelenme Durumu</th>
+                            <th>Oy Durumu</th>
+                            <th>Onay Durumu</th>
+                            <th>İşlemler</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for application in applications %}
+                            <tr>
+                                <td>
+                                    {% if application.user.discordId and application.user.discordUsername %}
+                                        {{ application.user.discordUsername }} <i class="fab fa-discord"></i><br /> (#{{ application.user.discordId }})
+                                    {% else %}
+                                        {{ application.user.username }}
+                                    {% endif %}
+                                </td>
+                                <td data-order="{{ application.createdAt|date("YmdHis") }}">{{ application.createdAt|date("d F Y, H:i") }}</td>
+                                <td>{{ application.status ? '<span class="text-success">İncelendi</span>' : '<span class="text-danger">İncelenmedi</span>' }}</td>
+                                <td>
+                                    {% for decision in application.decisions %}
+                                        {% if getDecisionTypeName(decision.decisionType) == 'REJECTED' %}
+                                            {% set textClass = 'text-danger' %}
+                                        {% elseif getDecisionTypeName(decision.decisionType) == 'APPROVED' %}
+                                            {% set textClass = 'text-success' %}
+                                        {% elseif getDecisionTypeName(decision.decisionType) == 'MAYBE_APPROVED' %}
+                                            {% set textClass = 'text-warning' %}
+                                        {% else %}
+                                            {% set textClass = '' %}
+                                        {% endif %}
+                                        <p class="{{ textClass }}">{{ decision.actingUser.username }}: <strong class="{{ textClass }}">{{ mapDecision(decision.decisionType) }}</strong></p>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% if getDecisionTypeName(application.decisionType) == 'REJECTED' %}
+                                        {% set textClass = 'text-danger' %}
+                                    {% elseif getDecisionTypeName(application.decisionType) == 'APPROVED' %}
+                                        {% set textClass = 'text-success' %}
+                                    {% elseif getDecisionTypeName(application.decisionType) == 'MAYBE_APPROVED' %}
+                                        {% set textClass = 'text-warning' %}
+                                    {% else %}
+                                        {% set textClass = '' %}
+                                    {% endif %}
+                                    <span class="{{ textClass }}">{{ mapDecision(application.decisionType) }}</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button
+                                                class="button button-box button-sm button-secondary add-note-button"
+                                                data-application-id="{{ application.id }}"
+                                                data-toggle="tooltip"
+                                                data-title="Not Ekle">
+                                            <i class="ti-pencil"></i>
+                                            {% if application.notes|length > 0 %}
+                                            <span class="badge badge-primary">{{ application.notes|length }}</span>
+                                            {% endif %}
+                                        </button>
+                                        <button class="button button-box button-sm button-warning" data-toggle="modal" data-target="#applicationDetail{{ application.id }}"><i class="ti-eye"></i></button>
+                                        {% include 'admin/modal/application.details.html.twig' with {'username': application.user.username, 'application': application } %}
+                                        <div class="dropdown">
+                                            <button class="button button-sm button-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">İşlemler</button>
+                                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item" href="{{ path('application_show', {'applicationId': application.id}) }}">Görüntüle</a>
+                                                {% if application.decisions|length > 0 or is_granted('ROLE_ADMIN') %}
+                                                    <a class="dropdown-item" href="{{ path('application_approved', {'applicationId': application.id}) }}">Başvuruyu Onayla</a>
+                                                    <a class="dropdown-item" href="{{ path('application_reject', {'applicationId': application.id}) }}">Başvuruyu Reddet</a>
+                                                {% endif %}
+                                                <a class="dropdown-item" href="{{ path('application_delete', {'applicationId': application.id}) }}">Sil</a>
+                                                {% if is_granted('ROLE_ADMIN') %}
+                                                <a class="dropdown-item text-danger" href="{{ path('application_purge', {'applicationId': application.id}) }}">Tamamen Sil</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        {% if getDecisionTypeName(application.decisionType) == 'NOT_DECIDED' %}
+                                            <div class="dropdown">
+                                                <button class="button button-sm button-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Oy Ver</button>
+
+                                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item" href="{{ path('add_approve_decision', {'applicationId': application.id}) }}">Kabul Et</a>
+                                                    <a class="dropdown-item" href="{{ path('add_maybe_approve_decision', {'applicationId': application.id}) }}">Kabule Yakın</a>
+                                                    <a class="dropdown-item" href="{{ path('add_reject_decision', {'applicationId': application.id}) }}">Reddet</a>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!--Default Data Table End-->
+
+    </div>
+
+    <!-- Modals -->
+    {% include 'admin/modal/new.note.html.twig' %}
+    <!-- Modals -->
+
+{% endblock %}
+{% block javascripts %}
+    <!-- Plugins & Activation JS For Only This Page -->
+    <script src="/static/admin/assets/js/plugins/datatables/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.12/sorting/datetime-moment.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.11/sorting/date-eu.js"></script>
+    <script src="/static/admin/assets/js/plugins/datatables/datatables.active.js"></script>
+    <script>
+        $(document).ready(function() {
+            let addNoteEvent = function() {
+                let $addNoteBtn = $('button.add-note-button');
+                let $addNoteModal = $('#newNote');
+                $addNoteBtn.off('click');
+                $addNoteBtn.on('click', function(e){
+                    let applicationId = $(this).data('application-id');
+                    $addNoteModal.find('input[name="applicationId"]').val(applicationId);
+                    $addNoteModal.modal('show');
+                });
+            }
+
+            addNoteEvent();
+
+            $('.data-table-default').on('draw.dt', function() {
+                addNoteEvent();
+            })
+        })
+    </script>
+{% endblock %}

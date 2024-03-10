@@ -1,0 +1,11 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Bir Hata Oluştu!{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <p class="alert alert-danger">
+            {{ errorMessage is defined and errorMessage ? errorMessage : 'Sistemsel bir hata oluştu, bu sayfayı görüntüleme yetkiniz olmayabilir.' }}
+        </p>
+    </div>
+{% endblock %}

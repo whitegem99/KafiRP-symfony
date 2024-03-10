@@ -1,0 +1,21 @@
+<div class="modal fade application-details" id="applicationDetail{{ application.id }}" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ username }}</h5>
+                <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                {{ getApplicationDetailsHtml(application.id)|raw }}
+            </div>
+            {% if getDecisionTypeName(application.decisionType) == 'NOT_DECIDED' %}
+                <div class="modal-footer">
+                    <small>Oy Ver: </small>
+                    <a href="{{ path('add_reject_decision', {'applicationId': application.id}) }}" class="button button-danger">Reddet</a>
+                    <a href="{{ path('add_maybe_approve_decision', {'applicationId': application.id}) }}" class="button button-warning">Kabule Yakın Et</a>
+                    <a href="{{ path('add_approve_decision', {'applicationId': application.id}) }}" class="button button-primary">Kabul Et</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Destek Talepleri{% endblock %}
+{% block pageTitle %}Destek Talepleri{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+
+        <!--Default Data Table Start-->
+        <div class="col-12 mb-30">
+            <div class="box">
+                <div class="box-body">
+
+                    {% set successMessages = app.session.flashBag.get('success') %}
+                    {% set errorMessages = app.session.flashBag.get('error') %}
+
+                    {% if successMessages|length > 0 %}
+                        {% for message in successMessages %}
+                            <p class="alert alert-success">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if errorMessages|length > 0 %}
+                        {% for message in errorMessages %}
+                            <p class="alert alert-danger">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    <table class="table table-bordered data-table data-table-default">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Başlık</th>
+                            <th>Üye</th>
+                            <th>Tarih</th>
+                            <th>Durum</th>
+                            <th>Aksiyon</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ticket in tickets %}
+                            <tr>
+                                <td>{{ ticket.id }}</td>
+                                <td>{{ ticket.title }}</td>
+                                <td>{{ ticket.user.username }}</td>
+                                <td>{{ ticket.createdAt.format('Y-m-d H:i:s') }}</td>
+                                <td>{{ ticket.status == 0 ? '<span class="badge badge-success">AÇIK</span>' : '<span class="badge badge-danger">KAPALI</span>' }}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a class="button button-box button-primary button-sm" href="{{ path('admin_ticket_detail', {'ticketId': ticket.id}) }}" data-toggle="tooltip" data-title="Görüntüle"><i class="ti-eye"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!--Default Data Table End-->
+
+    </div>
+
+    <!-- Modals -->
+    {% include 'admin/modal/new.note.html.twig' %}
+    <!-- Modals -->
+
+{% endblock %}
+{% block javascripts %}
+    <!-- Plugins & Activation JS For Only This Page -->
+    <script src="/static/admin/assets/js/plugins/datatables/datatables.min.js"></script>
+{#    <script src="/static/admin/assets/js/plugins/datatables/datatables.active.js"></script>#}
+    <script>
+
+        $(document).ready(function() {
+
+            if( $('.data-table-default').length ) {
+                $('.data-table-default').DataTable({
+                    responsive: true,
+                    pageLength: 100,
+                    order: [[3, 'desc']],
+                    language: {
+                        paginate: {
+                            previous: '<i class="zmdi zmdi-chevron-left"></i>',
+                            next:     '<i class="zmdi zmdi-chevron-right"></i>'
+                        },
+                        search: 'Arama: ',
+                        infoEmpty: 'Hiç kayıt yok',
+                        info: '_TOTAL_ kayıttan _START_-_END_ arası gösteriliyor',
+                        emptyTable: 'Hiç kayıt yok',
+                        loadingRecords: 'Yükleniyor...',
+                        processing: 'İşleniyor...',
+                        lengthMenu: '_MENU_ Kayıt Göster',
+                    },
+                });
+            }
+
+            // let addNoteEvent = function() {
+            //     let $addNoteBtn = $('button.add-note-button');
+            //     let $addNoteModal = $('#newNote');
+            //     $addNoteBtn.off('click');
+            //     $addNoteBtn.on('click', function(e){
+            //         let applicationId = $(this).data('application-id');
+            //         $addNoteModal.find('input[name="applicationId"]').val(applicationId);
+            //         $addNoteModal.modal('show');
+            //     });
+            // }
+            //
+            // addNoteEvent();
+            //
+            // $('.data-table-default').on('draw.dt', function() {
+            //     addNoteEvent();
+            // })
+        })
+    </script>
+{% endblock %}

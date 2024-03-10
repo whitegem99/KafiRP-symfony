@@ -1,0 +1,120 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Ana Sayfa{% endblock %}
+
+{% block body %}
+
+    <!-- Top Report Wrap Start -->
+    <div class="row">
+        <!-- Top Report Start -->
+        <div class="col-xlg-3 col-md-6 col-12 mb-30">
+            <div class="top-report">
+
+                <!-- Head -->
+                <div class="head">
+                    <h4>Bekleyen Başvurular</h4>
+{#                    <a href="#" class="view"><i class="zmdi zmdi-eye"></i></a>#}
+                </div>
+
+                <!-- Content -->
+                <div class="content">
+                    <h2>{{ notDecidedApplicationsCount }}</h2>
+                </div>
+
+            </div>
+        </div><!-- Top Report End -->
+
+        <!-- Top Report Start -->
+        <div class="col-xlg-3 col-md-6 col-12 mb-30">
+            <div class="top-report">
+
+                <!-- Head -->
+                <div class="head">
+                    <h4>İncelenmemiş Başvurular</h4>
+{#                    <a href="#" class="view"><i class="zmdi zmdi-eye"></i></a>#}
+                </div>
+
+                <!-- Content -->
+                <div class="content">
+                    <h2>{{ notReviewApplicationsCount }}</h2>
+                </div>
+
+            </div>
+        </div><!-- Top Report End -->
+
+        <!-- Top Report Start -->
+        <div class="col-xlg-3 col-md-6 col-12 mb-30">
+            <div class="top-report">
+
+                <!-- Head -->
+                <div class="head">
+                    <h4>Onaylanan Başvuru</h4>
+                </div>
+
+                <!-- Content -->
+                <div class="content">
+                    <h2>{{ approvedApplicationsCount }}</h2>
+                </div>
+
+            </div>
+        </div><!-- Top Report End -->
+
+        <!-- Top Report Start -->
+        <div class="col-xlg-3 col-md-6 col-12 mb-30">
+            <div class="top-report">
+
+                <!-- Head -->
+                <div class="head">
+                    <h4>Toplam Üye</h4>
+                </div>
+
+                <!-- Content -->
+                <div class="content">
+                    <h2>{{ totalMembersCount }}</h2>
+                </div>
+
+            </div>
+        </div><!-- Top Report End -->
+    </div>
+    <!-- Top Report Wrap End -->
+
+    <div class="row">
+        <div class="col-6 col-xs-12">
+            <div class="box">
+                <div class="box-head">
+                    <h4 class="title">Başvuru Durumu</h4>
+                </div>
+                <div class="box-body">
+                    <div id="donutchart" style="width: 100%; height: 500px; margin: 0 15px; border-radius: 4px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xs-12">
+            <div class="box">
+                <div class="box-head">
+                    <h4 class="title">Başvuru Sayıları</h4>
+                </div>
+                <div class="box-body">
+                    <div id="columnchart" style="width: 100%; height: 500px; margin: 0 15px; border-radius: 4px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="/static/admin/assets/js/additional.js"></script>
+    <script>
+        Chart.init({
+            applicationStatusData: {
+                approvedApplicationsCount: {{ approvedApplicationsCount }},
+                rejectedApplicationsCount: {{ rejectedApplicationsCount }},
+                maybeApprovedApplicationsCount: {{ maybeApprovedApplicationsCount }},
+                notDecidedApplicationsCount: {{ notDecidedApplicationsCount }},
+            },
+            applicationData: {{ applicationData|json_encode|raw }},
+            applicationStatusElmId: 'donutchart',
+            applicationDataElmId: 'columnchart'
+        });
+    </script>
+{% endblock %}

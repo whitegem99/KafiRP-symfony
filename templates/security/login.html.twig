@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/fontawesome-all.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/iofrm-style.css">
+<link rel="stylesheet" type="text/css" href="/static/css/iofrm-theme13.css">
+    <link rel="stylesheet" href="/static/css/app.css">
+{% endblock %}
+{% block body %}
+<form method="post" class="d-flex justify-content-center" style="flex-direction: column">
+{#    {% if error %}#}
+{#        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
+{#    {% endif %}#}
+
+{#    {% if app.user %}#}
+{#        <div class="mb-3">#}
+{#            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>#}
+{#        </div>#}
+{#    {% endif %}#}
+    <div class="logo">
+        <img src="/static/images/ucak.jpg" alt="Kafi RP" />
+    </div>
+    <div class="form-content">
+        <div class="form-items">
+            <div class="page-links">
+                <a href="javascript:;" class="active">Üye Girişi</a>
+            </div>
+            <form>
+                <input class="form-control" type="text" name="username" placeholder="Kullanıcı Adı" required="" value="{{ last_username }}" autofocus autocomplete="off" />
+                <input class="form-control" type="password" name="password" placeholder="Parola" required="">
+                <div class="form-button d-flex align-items-center">
+                    <button id="submit" type="submit" class="ibtn">Giriş Yap</button>
+                    <a href="{{ path('oauth_discord') }}"><i class="fab fa-discord"></i></a>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+            </form>
+{#            <div class="other-links">#}
+{#                <a href="{{ path('oauth_discord') }}"><i class="fab fa-discord"></i></a>#}
+{#            </div>#}
+        </div>
+    </div>
+
+{#    #}
+{#    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>#}
+{#    <label for="inputUsername">Username</label>#}
+{#    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" required autofocus>#}
+{#    <label for="inputPassword">Password</label>#}
+{#    <input type="password" name="password" id="inputPassword" class="form-control" required>#}
+
+{#    <input type="hidden" name="_csrf_token"#}
+{#           value="{{ csrf_token('authenticate') }}"#}
+{#    >#}
+
+    {#
+        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+        See https://symfony.com/doc/current/security/remember_me.html
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Remember me
+            </label>
+        </div>
+    #}
+
+{#    <button class="btn btn-lg btn-primary" type="submit">#}
+{#        Sign in#}
+{#    </button>#}
+
+{#    <div>#}
+{#        <a class="btn btn-lg btn-primary" href="{{ path('oauth_discord') }}">Login via Discord</a>#}
+{#    </div>#}
+
+</form>
+{% endblock %}

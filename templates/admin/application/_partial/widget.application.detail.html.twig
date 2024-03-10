@@ -1,0 +1,8 @@
+{% for item in application.answers %}
+    <div class="application-detail-item">
+        <div class="application-detail-item-inner">
+            <h6>{{ getQuestionText(item.questionId, item.answerType) }}</h6>
+            <p>{{ getAnswerText(item.questionId, item.answer, item.answerType) }}</p>
+        </div>
+    </div>
+{% endfor %}

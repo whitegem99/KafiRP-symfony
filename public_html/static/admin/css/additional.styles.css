@@ -1,0 +1,56 @@
+.header-logo {
+    height: 80px;
+}
+
+.side-header {
+    top: 80px;
+    height: calc(100vh - 80px);
+}
+
+.application-detail-item {
+    padding-bottom: 15px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    margin-bottom: 15px;
+}
+
+.application-detail-item h6 {
+    margin: 0;
+    padding: 0;
+}
+
+.application-detail-item-inner {
+    position: relative;
+}
+
+.application-detail-item-inner button.button-clipboard {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.modal-backdrop {
+    z-index: 10040;
+}
+
+.modal {
+    z-index: 10050;
+}
+
+.modal.application-details .modal-body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    white-space: normal;
+    max-height: 500px;
+}
+
+.button-box {
+    position: relative;
+}
+
+.button-box span.badge {
+    position: absolute;
+    left: -7px;
+    top: -7px;
+    display: block;
+    border-radius: 20px;
+}

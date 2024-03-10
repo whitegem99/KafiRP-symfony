@@ -1,0 +1,52 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Yeni Kullanıcı Oluştur{% endblock %}
+{% block pageTitle %}Yeni Kullanıcı Oluştur{% endblock %}
+
+{% block body %}
+    <div class="box">
+        <div class="box-body">
+            <form method="post">
+                <div class="row">
+                    <div class="col-12 mb-15">
+                        <label>{{ form_label(form.username) }}</label>
+                        {{ form_widget(form.username, {'attr': {'class': 'form-control', 'placeholder': 'Bir kullanıcı adı belirleyin'}}) }}
+                    </div>
+
+                    <div class="col-12 mb-15">
+                        <label>{{ form_label(form.password) }}</label>
+                        {{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Bir parola belirleyin' }}) }}
+                    </div>
+
+                    <div class="col-12 mb-20">
+                        <label>{{ form_label(form.roles) }}</label>
+                        {% for key, item in form.roles.children %}
+                            <div class="adomx-checkbox mb-10">
+                                <input
+                                        class="form-control"
+                                        id="{{item.vars.id}}"
+                                        type="checkbox"
+                                        value="{{item.vars.value}}"
+                                        name="{{item.vars.full_name}}"
+                                {{ item.vars.checked ? 'checked' : '' }}
+                                / >
+                                <i class="icon"></i>
+                                <label for="{{item.vars.id}}">{{item.vars.label}}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-12 mb-20">
+                        <label>{{ form_label(form.email) }}</label>
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'E-Posta adresi girin' }}) }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_widget(form._token) }}
+                        {{ form_widget(form.save, {'attr': {'class': 'button button-primary'}}) }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

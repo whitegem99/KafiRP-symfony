@@ -1,0 +1,16 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Yeni Soru Tipi Oluştur{% endblock %}
+{% block pageTitle %}Yeni Soru Tipi Oluştur{% endblock %}
+
+{% block body %}
+    <form method="post">
+        <div class="c-field u-mb-small">
+            <label class="c-field__label">{{ form_label(form.name) }}</label>
+            {{ form_widget(form.name, {'attr': {'class': 'c-input u-mb-small', 'placeholder': 'Soru tipi için bir isim yazınız'}}) }}
+        </div>
+
+        {{ form_widget(form._token) }}
+        {{ form_widget(form.save, {'attr': {'class': 'c-btn c-btn--info'}}) }}
+    </form>
+{% endblock %}

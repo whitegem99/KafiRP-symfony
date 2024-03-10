@@ -1,0 +1,134 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Destek Talebi Detayı{% endblock %}
+{% block pageTitle %}Destek Talebi Detayı{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-7">
+            <div class="box">
+                <div class="box-head">
+                    <h4 class="title">
+                        Talep: {{ ticket.title }}
+                        {{ ticket.status == 0 ? '<span class="badge badge-success">AÇIK</span>' : '<span class="badge badge-danger">KAPALI</span>' }}
+                    </h4>
+                </div>
+                <div class="box-body">
+                    <div class="application-detail-item">
+                        <div class="application-detail-item-inner">
+                            <h6>{{ ticket.content }}</h6>
+                            <p>{{ ticket.user.username }} ({{ ticket.createdAt.format('Y-m-d H:i:s') }})</p>
+                            {% if ticket.images|length > 0 %}
+                                <h5 style="font-size: 14px;">Dosyalar</h5>
+                                <ul style="font-size: 14px;" class="mt-0 mb-0 pb-0 pt-0">
+                                    {% for image in ticket.images %}
+                                        <li><a href="/uploads/ticket/images/{{ image.path }}" target="_blank">{{ image.originalName }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% for ticketMessage in ticketMessages %}
+                        <div class="application-detail-item">
+                            <div class="application-detail-item-inner">
+                                <h6>{{ ticketMessage.message }}</h6>
+                                <p>{{ ticketMessage.user.username }} ({{ ticketMessage.createdAt.format('Y-m-d H:i:s') }})</p>
+                                {% if ticketMessage.images|length > 0 %}
+                                    <h5 style="font-size: 14px;">Dosyalar</h5>
+                                    <ul style="font-size: 14px;" class="mt-0 mb-0 pb-0 pt-0">
+                                        {% for image in ticketMessage.images %}
+                                            <li><a href="/uploads/ticket/images/{{ image.path }}" target="_blank">{{ image.originalName }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="box mt-3">
+                <div class="box-head">
+                    <h4 class="title">Destek Talebi Aksiyon</h4>
+                </div>
+                <div class="box-body">
+                    {{ form(form) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="box">
+                <div class="box-body">
+                    <div class="author-top">
+                        <div class="inner pt-30 pb-30">
+                            <div class="author-profile">
+                                <div class="image">
+                                    <img src="{{ ticket.user.discordAvatar ?? '/static/images/ucak.jpg' }}" alt="">
+                                </div>
+                                <div class="info">
+                                    <h5>{{ ticket.user.username }}</h5>
+                                    <span>{{ ticket.user.email }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box mt-15">
+                <div class="box-body">
+                    {% if ticket.status == 0 %}
+                        <a href="{{ path('admin_update_ticket_status', {'ticketId': ticket.id, 'status': true}) }}" class="button button-danger w-100 text-center">Talebi Kapat</a>
+                    {% else %}
+                        <a href="{{ path('admin_update_ticket_status', {'ticketId': ticket.id, 'status': false}) }}" class="button button-success w-100 text-center">Talebi Aç</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="box mt-15">
+                <div class="box-body">
+                    <div class="application-detail-item">
+                        <div class="application-detail-item-inner">
+                            <h6>E-Posta Adresi</h6>
+                            <p id="userEmail" class="m-0">{{ ticket.user.email }}</p>
+                            <button class="button button-box button-xs button-info button-clipboard" data-clipboard-target="#userEmail"><i class="ti-clipboard"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="application-detail-item">
+                        <div class="application-detail-item-inner">
+                            <h6>Discord ID</h6>
+                            <p id="discordId" class="m-0">{{ ticket.user.discordId }}</p>
+                            <button class="button button-box button-xs button-info button-clipboard" data-clipboard-target="#discordId"><i class="ti-clipboard"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="application-detail-item">
+                        <div class="application-detail-item-inner">
+                            <h6>Discord Kullanıcı Adı</h6>
+                            <p id="discordUsername" class="m-0">{{ ticket.user.discordUsername }}</p>
+                            <button class="button button-box button-xs button-info button-clipboard" data-clipboard-target="#discordUsername"><i class="ti-clipboard"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+{% block javascripts %}
+{#    <script src="/static/admin/assets/js/plugins/clipboard/clipboard.min.js"></script>#}
+{#    <script src="/static/admin/assets/js/plugins/clipboard/clipboard.active.js"></script>#}
+    <script>
+        // let $addNoteBtn = $('a.add-note-button');
+        // let $addNoteModal = $('#newNote');
+        //
+        // $addNoteBtn.off('click');
+        // $addNoteBtn.on('click', function(e){
+        //     let applicationId = $(this).data('application-id');
+        //     $addNoteModal.find('input[name="applicationId"]').val(applicationId);
+        //     $addNoteModal.modal('show');
+        // });
+    </script>
+{% endblock %}

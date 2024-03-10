@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Admin Page{% endblock %} | KafiRP</title>
+        {# Run `composer require symfony/webpack-encore-bundle`
+           and uncomment the following Encore helpers to start using Symfony UX #}
+
+{#        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">#}
+
+        {% block stylesheets %}
+            <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="/static/admin/assets/css/vendor/bootstrap.min.css">
+
+            <!-- Icon Font CSS -->
+            <link rel="stylesheet" href="/static/admin/assets/css/vendor/material-design-iconic-font.min.css">
+            <link rel="stylesheet" href="/static/admin/assets/css/vendor/font-awesome.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.0/css/all.min.css">
+            <link rel="stylesheet" href="/static/admin/assets/css/vendor/themify-icons.css">
+            <link rel="stylesheet" href="/static/admin/assets/css/vendor/cryptocurrency-icons.css">
+
+            <!-- Plugins CSS -->
+            <link rel="stylesheet" href="/static/admin/assets/css/plugins/plugins.css">
+
+            <!-- Helper CSS -->
+            <link rel="stylesheet" href="/static/admin/assets/css/helper.css">
+
+            <!-- Main Style CSS -->
+            <link rel="stylesheet" href="/static/admin/assets/css/style.css">
+            <link rel="stylesheet" href="/static/admin/css/additional.styles.css">
+        {% endblock %}
+
+    </head>
+    <body class="skin-dark">
+        <div class="main-wrapper">
+            <!-- Header Section Start -->
+            <div class="header-section">
+                <div class="container-fluid">
+                    <div class="row justify-content-between align-items-center">
+
+                        <!-- Header Logo (Header Left) Start -->
+                        <div class="header-logo col-auto">
+                            <a href="{{ path('admin_home') }}">
+                                Kafi RP
+{#                                <img src="/static/admin/img/ucak.jpg" alt="">#}
+{#                                <img src="/static/admin/img/ucak.jpg" class="logo-light" alt="">#}
+                            </a>
+                        </div><!-- Header Logo (Header Left) End -->
+
+                        <!-- Header Right Start -->
+                        <div class="header-right flex-grow-1 col-auto">
+                            <div class="row justify-content-between align-items-center">
+
+                                <!-- Side Header Toggle & Search Start -->
+                                <div class="col-auto">
+                                    <div class="row align-items-center">
+
+                                        <!--Side Header Toggle-->
+                                        <div class="col-auto"><button class="side-header-toggle"><i class="zmdi zmdi-menu"></i></button></div>
+
+                                    </div>
+                                </div><!-- Side Header Toggle & Search End -->
+
+                                <!-- Header Notifications Area Start -->
+                                <div class="col-auto">
+
+                                    <ul class="header-notification-area">
+
+                                        <!--User-->
+                                        <li class="adomx-dropdown col-auto">
+                                            <a class="toggle" href="#">
+                                            <span class="user">
+{#                                        <span class="avatar">#}
+{#                                            <img src="assets/images/avatar/avatar-1.jpg" alt="">#}
+{#                                            <span class="status"></span>#}
+{#                                            </span>#}
+                                            <span class="name">{{ app.user.username }}</span>
+                                            </span>
+                                            </a>
+
+                                            <!-- Dropdown -->
+                                            <div class="adomx-dropdown-menu dropdown-menu-user">
+                                                <div class="head">
+                                                    <h5 class="name"><a href="#">{{ app.user.username }}</a></h5>
+                                                </div>
+                                                <div class="body">
+                                                    <ul>
+                                                        <li><a href="{{ path('app_logout') }}"><i class="zmdi zmdi-lock-open"></i>Çıkış Yap</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </li>
+
+                                    </ul>
+
+                                </div><!-- Header Notifications Area End -->
+
+                            </div>
+                        </div><!-- Header Right End -->
+
+                    </div>
+                </div>
+            </div>
+            <!-- Header Section End -->
+
+            <!-- Side Header Start -->
+            <div class="side-header show">
+                <button class="side-header-close"><i class="zmdi zmdi-close"></i></button>
+                <!-- Side Header Inner Start -->
+                <div class="side-header-inner custom-scroll ps">
+
+                    <nav class="side-header-menu" id="side-header-menu">
+                        <ul>
+                            {% set activeRoute = app.request.get('_route') %}
+                            {% set dashboardRoutes = ['admin_home'] %}
+                            <li class="has-sub-menu{% if activeRoute in dashboardRoutes %} active{% endif %}"><a href="#"><i class="ti-home"></i> <span>Dashboard</span><span class="menu-expand"><i class="zmdi zmdi-chevron-up"></i></span></a>
+                                <ul class="side-header-sub-menu" >
+                                    <li{% if app.request.get('_route') == 'admin_home' %} class="active"{% endif %}><a href="{{ path('admin_home') }}"><span>Ana Sayfa</span></a></li>
+                                </ul>
+                            </li>
+{#                            <li><a href="widgets.html"><i class="ti-palette"></i> <span>Widgets</span></a></li>#}
+                            {% set applicationRoutes = ['application_list', 'application_show', 'approved_application_list', 'application_archive_list'] %}
+                            <li class="has-sub-menu{% if activeRoute in applicationRoutes %} active{% endif %}"><a href="#"><i class="ti-check-box"></i> <span>Başvuru Yönetimi</span><span class="menu-expand"><i class="zmdi zmdi-chevron-down"></i></span></a>
+                                <ul class="side-header-sub-menu">
+                                    <li{% if app.request.get('_route') == 'application_list' %} class="active"{% endif %}><a href="{{ path('application_list') }}"><span>Başvuru Listesi</span></a></li>
+                                    <li{% if app.request.get('_route') == 'approved_application_list' %} class="active"{% endif %}><a href="{{ path('approved_application_list') }}"><span>Kabul Edilen Başvurular</span></a></li>
+                                    <li{% if app.request.get('_route') == 'application_archive_list' %} class="active"{% endif %}><a href="{{ path('application_archive_list') }}"><span>Arşivlenmiş Başvurular</span></a></li>
+                                </ul>
+                            </li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            {% set userManagementRoutes = ['user_list', 'user_new', 'user_edit', 'user_deleted_list'] %}
+                            <li class="has-sub-menu{% if activeRoute in userManagementRoutes %} active{% endif %}"><a href="#"><i class="ti-user"></i> <span>Kullanıcı Yönetimi</span><span class="menu-expand"><i class="zmdi zmdi-chevron-down"></i></span></a>
+                                <ul class="side-header-sub-menu">
+                                    <li{% if app.request.get('_route') == 'user_list' %} class="active"{% endif %}><a href="{{ path('user_list') }}"><span>Kullanıcı Listesi</span></a></li>
+                                    <li{% if app.request.get('_route') == 'user_new' %} class="active"{% endif %}><a href="{{ path('user_new') }}"><span>Yeni Kullanıcı Oluştur</span></a></li>
+                                    <li{% if app.request.get('_route') == 'user_deleted_list' %} class="active"{% endif %}><a href="{{ path('user_deleted_list') }}"><span>Silinen Kullanıcılar</span></a></li>
+                                </ul>
+                            </li>
+                            {% endif %}
+                            {% set applicationQuestionRoutes = ['question_list', 'question_new'] %}
+                            <li class="has-sub-menu{% if activeRoute in applicationQuestionRoutes %} active{% endif %}"><a href="#"><i class="ti-notepad"></i> <span>Başvuru Soru Yönetimi</span><span class="menu-expand"><i class="zmdi zmdi-chevron-down"></i></span></a>
+                                <ul class="side-header-sub-menu">
+                                    <li{% if app.request.get('_route') == 'question_list' %} class="active"{% endif %}><a href="{{ path('question_list') }}"><span>Başvuru Soru Listesi</span></a></li>
+                                    <li{% if app.request.get('_route') == 'question_new' %} class="active"{% endif %}><a href="{{ path('question_new') }}"><span>Başvuru Sorusu Seç</span></a></li>
+                                </ul>
+                            </li>
+                            {% set questionRoutes = ['question_text_list', 'question_new_text', 'question_choices_list', 'question_new_choice'] %}
+                            <li class="has-sub-menu{% if activeRoute in questionRoutes %} active{% endif %}"><a href="#"><i class="ti-book"></i> <span>Soru Yönetimi</span><span class="menu-expand"><i class="zmdi zmdi-chevron-down"></i></span></a>
+                                <ul class="side-header-sub-menu">
+                                    <li{% if app.request.get('_route') == 'question_text_list' %} class="active"{% endif %}><a href="{{ path('question_text_list') }}"><span>Metin Soruları</span></a></li>
+                                    <li{% if app.request.get('_route') == 'question_new_text' %} class="active"{% endif %}><a href="{{ path('question_new_text') }}"><span>Yeni Metin Sorusu Oluştur</span></a></li>
+                                    <li{% if app.request.get('_route') == 'question_choices_list' %} class="active"{% endif %}><a href="{{ path('question_choices_list') }}"><span>Çoktan Seçmeli Sorular</span></a></li>
+                                    <li{% if app.request.get('_route') == 'question_new_choice' %} class="active"{% endif %}><a href="{{ path('question_new_choice') }}"><span>Yeni Seçmeli Soru Oluştur</span></a></li>
+                                </ul>
+                            </li>
+
+                            {% if is_granted('ROLE_SUPPORT') %}
+                            {% set ticketRoutes = ['admin_ticket_list', 'admin_ticket_detail', 'admin_all_ticket_list'] %}
+                            <li class="has-sub-menu{% if activeRoute in ticketRoutes %} active{% endif %}"><a href="#"><i class="ti-book"></i> <span>Destek Talepleri</span><span class="menu-expand"><i class="zmdi zmdi-chevron-down"></i></span></a>
+                                <ul class="side-header-sub-menu">
+                                    <li{% if app.request.get('_route') == 'admin_ticket_list' %} class="active"{% endif %}><a href="{{ path('admin_ticket_list') }}"><span>Açık Destek Talepleri</span></a></li>
+                                    <li{% if app.request.get('_route') == 'admin_all_ticket_list' %} class="active"{% endif %}><a href="{{ path('admin_all_ticket_list') }}"><span>Tüm Destek Talepleri</span></a></li>
+                                </ul>
+                            </li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_ADMIN') %}
+                            {% set settingsRoutes = ['settings'] %}
+                            <li class="{% if activeRoute in settingsRoutes %} active{% endif %}">
+                                <a href="{{ path('settings') }}"><i class="ti-settings"></i> <span>Ayarlar</span></a>
+                            </li>
+                            {% endif %}
+
+                        </ul>
+                    </nav>
+
+                    <div class="ps__rail-x" style="left: 0px; bottom: 3px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 3px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div><!-- Side Header Inner End -->
+            </div>
+            <!-- Side Header End -->
+
+            <!-- Content Body Start -->
+            <div class="content-body">
+
+                <!-- Page Headings Start -->
+                <div class="row justify-content-between align-items-center mb-10">
+
+                    <!-- Page Heading Start -->
+                    <div class="col-12 col-lg-auto mb-20">
+                        <div class="page-heading">
+                            <h3>Admin <span>/ {% block pageTitle %}Dashboard{% endblock %}</span></h3>
+                        </div>
+                    </div><!-- Page Heading End -->
+
+                </div><!-- Page Headings End -->
+
+                {% block body %}{% endblock %}
+
+            </div>
+            <!-- Content Body End -->
+
+            <!-- Footer Section Start -->
+            <div class="footer-section">
+                <div class="container-fluid">
+
+                    <div class="footer-copyright text-center">
+                        <p class="text-body-light">2021 &copy; Kafi RP</p>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Footer Section End -->
+        </div>
+
+        <!-- Global Vendor, plugins & Activation JS -->
+        <script src="/static/admin/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+        <script src="/static/admin/assets/js/vendor/jquery-3.3.1.min.js"></script>
+        <script src="/static/admin/assets/js/vendor/popper.min.js"></script>
+        <script src="/static/admin/assets/js/vendor/bootstrap.min.js"></script>
+        <!--Plugins JS-->
+        <script src="/static/admin/assets/js/plugins/perfect-scrollbar.min.js"></script>
+        <script src="/static/admin/assets/js/plugins/tippy4.min.js.js"></script>
+        <!--Main JS-->
+        <script src="/static/admin/assets/js/main.js"></script>
+
+        {% block javascripts %}
+        {% endblock %}
+
+{#        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>#}
+    </body>
+</html>

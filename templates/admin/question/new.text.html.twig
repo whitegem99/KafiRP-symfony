@@ -1,0 +1,32 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Yeni Soru Oluştur{% endblock %}
+{% block pageTitle %}Yeni Soru Oluştur{% endblock %}
+
+{% block body %}
+    <div class="box">
+        <div class="box-body">
+            <form method="post">
+                <div class="row">
+                    <div class="col-12 mb-15">
+                        <label>{{ form_label(form.text) }}</label>
+                        {{ form_widget(form.text, {'attr': {'class': 'form-control', 'placeholder': 'Soru metnini yazınız'}}) }}
+                    </div>
+
+                    <div class="col-12 mb-15">
+                        <label>{{ form_label(form.helpText) }}</label>
+                        {{ form_widget(form.helpText, {'attr': {'class': 'form-control', 'placeholder': 'Eğer varsa soru yardımcı metnini yazınız' }}) }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_widget(form._token) }}
+                        {{ form_widget(form.save, {'attr': {'class': 'button button-info'}}) }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script></script>
+{% endblock %}

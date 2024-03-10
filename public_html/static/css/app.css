@@ -1,0 +1,75 @@
+body, html {
+    height: 100%;
+}
+.container-fluid {
+    height: 100%;
+}
+
+.container-fluid .row {
+    height: 100%;
+}
+
+.container-fluid .row .image {
+    background: url('../images/gta-v-background.jpg') no-repeat;
+    background-size: cover;
+}
+
+.container-fluid .row .form-wrapper {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.form-content {
+ text-align: center;
+}
+
+.form-content .form-items {
+    width: 80%;
+    margin: 15px auto;
+}
+
+.form-content .form-items p.help-text {
+    font-size:12px;
+    margin: 0;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 5px;
+    margin: 0 auto;
+}
+
+.logo img {
+    max-width: 100%;
+}
+
+form {
+    width: 100%;
+}
+
+form .form-group {
+    border-bottom: 1px solid rgba(221, 221, 221, 0.4);
+    padding: 15px 0;
+}
+
+.fab.fa-discord {
+    background-color: #7289DA !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 20px !important;
+    padding-top: 7px !important;
+    display: inline-block !important;
+    color: #fff !important;
+    border-radius: 25px !important;
+    text-align: center !important;
+    margin: 0 5px !important;
+    -webkit-transition: all 0.3s ease !important;
+    transition: all 0.3s ease !important;
+}
+
+.alert.alert-success {
+    font-weight: 500;
+    margin: 15px 0;
+}

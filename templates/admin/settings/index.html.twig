@@ -1,0 +1,66 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Ayarlar{% endblock %}
+{% block pageTitle %}Ayarlar{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-head">
+                    <h4 class="title">Ayarlar</h4>
+                </div>
+                <div class="box-body">
+                    <form method="POST">
+                        <div class="form-group mb-30">
+                            <h6 class="mb-15">Başvuru alımı açık mı?</h6>
+                            <div class="adomx-checkbox-radio-group">
+                                <label class="adomx-radio-2"><input type="radio" name="openToApplication"{% if settings.openToApplication %} checked=""{% endif %} value="1"> <i class="icon"></i> Evet</label>
+                                <label class="adomx-radio-2"><input type="radio" name="openToApplication"{% if settings.openToApplication == false %} checked=""{% endif %} value="0"> <i class="icon"></i> Hayır</label>
+                            </div>
+                        </div>
+                        <div class="form-group mb-30">
+                            <h6 class="mb-15">Başvuru herkese açık mı?</h6>
+                            {% set forEverybody = settings.allowDiscordRoles|length == 0 %}
+                            <div class="adomx-checkbox-radio-group">
+                                <label class="adomx-radio-2"><input type="radio" name="forEveryBody"{% if forEverybody %} checked=""{% endif %} value="1"> <i class="icon"></i> Evet</label>
+                                <label class="adomx-radio-2"><input type="radio" name="forEveryBody"{% if forEverybody == false %} checked=""{% endif %} value="0"> <i class="icon"></i> Hayır</label>
+                            </div>
+
+                            <div class="mt-15 allowed-discord-roles"{% if forEverybody %} style="display: none;"{% endif %}>
+                                <label>
+                                    İzin Verilen Discord Rolleri (Rol ID'leri)
+                                    <input type="text" class="form-control mt-5" name="allowedDiscordRoleIds" value="{{ settings.allowDiscordRoles|join(',') }}" />
+                                </label>
+                                <small>Rol ID değerleri birden fazlaysa aralarında virgül koyarak ekleyiniz.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h6 class="mb-15">Arşiv Tarihi</h6>
+                            <div class="col-12 mb-15 pl-0">
+                                <input type="text" id="archiveHistory" name="archiveHistory" class="form-control" placeholder="1970-01-01 00:00:00" value="{{ settings.archiveHistory != null ? settings.archiveHistory.format('Y-m-d H:i:s') : '' }}" />
+                                <p id="question_random_help" class="help-text"><small>Arşivlemek istediğiniz başvurular için bu alana tarih girebilir veya boş bırakabilirsiniz. Girdiğiniz tarihten önceki tüm kayıtlar sadece <strong><a href="{{ path('application_archive_list') }}">Arşivlenmiş Başvurular</a></strong> sayfasında görünecektir.</small></p>
+                            </div>
+                        </div>
+                        <div class="mt-15">
+                            <button type="submit" class="button button-sm button-primary">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        $('input[name="forEveryBody"]').on('change', function() {
+            if ($(this).val() === "1") {
+                $('.allowed-discord-roles').hide();
+            } else {
+                $('.allowed-discord-roles').show();
+            }
+        });
+    });
+</script>
+{% endblock %}

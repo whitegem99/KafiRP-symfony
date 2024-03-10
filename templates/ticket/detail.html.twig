@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kafi RP Ticket{% endblock %}
+
+{% block body %}
+    <div class="form-content flex-fill">
+        <div class="form-items" style="max-width: 100%">
+            <h3>KafiRP Destek</h3>
+            {% include 'ticket/_header.html.twig' %}
+            {% if ticket != null %}
+
+                {% if success is defined and success == true %}
+                <div class="alert alert-success">
+                    <p class="m-0 p-0">Cevabınız başarıyla kayıt edilmiştir.</p>
+                </div>
+                {% endif %}
+
+                <div class="card">
+                    <div class="card-header">
+                        {{ ticket.title }}
+                        {% if ticket.status == 0 %}
+                            <span class="badge bg-success">AÇIK</span>
+                        {% else %}
+                            <span class="badge bg-danger">KAPALI</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ ticket.content }}</p>
+                        {% if ticket.images|length > 0 %}
+                        <h5 style="font-size: 14px;">Dosyalar</h5>
+                            <ul style="font-size: 14px;" class="mt-0 mb-0 pb-0 pt-0">
+                                {% for image in ticket.images %}
+                                <li><a href="/uploads/ticket/images/{{ image.path }}" target="_blank">{{ image.originalName }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">{{ ticket.user.username }} ({{ ticket.createdAt.format('Y-m-d H:i:s') }})</small>
+                    </div>
+                </div>
+
+                {% if ticketMessages|length > 0 %}
+                    {% for ticketMessage in ticketMessages %}
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <p class="card-text">{{ ticketMessage.message }}</p>
+                            {% if ticketMessage.images|length > 0 %}
+                                <h5 style="font-size: 14px;">Dosyalar</h5>
+                                <ul style="font-size: 14px;" class="mt-0 mb-0 pb-0 pt-0">
+                                    {% for image in ticketMessage.images %}
+                                        <li><a href="/uploads/ticket/images/{{ image.path }}" target="_blank">{{ image.originalName }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <p class="card-text">
+                                <small class="text-muted">{{ ticketMessage.user.username }} ({{ ticketMessage.createdAt.format('Y-m-d H:i:s') }})</small>
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
+                {{ form(form) }}
+
+            {% else %}
+            <p>Destek talebi bulunamadı.</p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('#form_message').val('');
+        });
+    </script>
+{% endblock %}

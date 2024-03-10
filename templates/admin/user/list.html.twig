@@ -1,0 +1,48 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Kullanıcı Listesi{% endblock %}
+{% block pageTitle %}Kullanıcı Listesi{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+
+        <!--Default Data Table Start-->
+        <div class="col-12 mb-30">
+            <div class="box">
+                <div class="box-body">
+
+                    <table class="table table-bordered data-table data-table-default">
+                        <thead>
+                        <tr>
+                            <th>Kullanıcı Adı</th>
+                            <th>Yetkiler</th>
+                            <th>İşlemler</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>{{ mapAccess(user.roles) }}</td>
+                                <td>
+                                    {% if user.username != 'admin' %}
+                                    <a class="button button-primary button-sm" href="{{ path('user_edit', {'userId': user.id}) }}">Düzenle</a>
+                                    <a class="button button-danger button-sm" href="{{ path('user_delete', {'userId': user.id}) }}">Sil</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!--Default Data Table End-->
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Başvuru Detayı{% endblock %}
+{% block pageTitle %}Başvuru Detayı{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-7">
+            <div class="box">
+                <div class="box-head">
+                    <h4 class="title">Başvuru Detayları</h4>
+                </div>
+                <div class="box-body">
+                    {% include 'admin/application/_partial/widget.application.detail.html.twig' %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="box">
+                <div class="box-body">
+                    <div class="author-top">
+                        <div class="inner pt-30 pb-30">
+                            <div class="author-profile">
+                                <div class="image">
+                                    <img src="{{ application.user.discordAvatar ?? '/static/images/ucak.jpg' }}" alt="">
+                                </div>
+                                <div class="info">
+                                    <h5>{{ application.user.username }}</h5>
+                                    <span>{{ application.user.email }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box mt-15">
+                <div class="box-body">
+                    <div class="application-detail-item">
+                        <div class="application-detail-item-inner">
+                            <h6>E-Posta Adresi</h6>
+                            <p id="userEmail" class="m-0">{{ application.user.email }}</p>
+                            <button class="button button-box button-xs button-info button-clipboard" data-clipboard-target="#userEmail"><i class="ti-clipboard"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="application-detail-item">
+                        <div class="application-detail-item-inner">
+                            <h6>Discord ID</h6>
+                            <p id="discordId" class="m-0">{{ application.user.discordId }}</p>
+                            <button class="button button-box button-xs button-info button-clipboard" data-clipboard-target="#discordId"><i class="ti-clipboard"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="application-detail-item">
+                        <div class="application-detail-item-inner">
+                            <h6>Discord Kullanıcı Adı</h6>
+                            <p id="discordUsername" class="m-0">{{ application.user.discordUsername }}</p>
+                            <button class="button button-box button-xs button-info button-clipboard" data-clipboard-target="#discordUsername"><i class="ti-clipboard"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box mt-15">
+                <div class="box-head" style="display: flex;justify-content: space-between;align-items: center;">
+                    <h4 class="title">Verilen Oylar</h4>
+                    {% if isVoted == false %}
+                        <div class="decision-actions">
+                            <a class="button button-sm button-success" href="{{ path('add_approve_decision', {'applicationId': application.id}) }}">Kabul Et</a>
+                            <a class="button button-sm button-warning" href="{{ path('add_maybe_approve_decision', {'applicationId': application.id}) }}">Kabule Yakın</a>
+                            <a class="button button-sm button-danger" href="{{ path('add_reject_decision', {'applicationId': application.id}) }}">Reddet</a>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if application.decisions|length > 0 %}
+                <div class="box-body">
+                    <table class="table table-sm table-borderless">
+                        <thead>
+                        <tr>
+                            <th>Oy Veren</th>
+                            <th class="text-right">Oy</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for decision in application.decisions %}
+                            <tr>
+                                <td>{{ decision.actingUser.username }}</td>
+                                <td class="text-right">
+                                    {% if getDecisionTypeName(decision.decisionType) == 'REJECTED' %}
+                                        {% set textClass = 'text-danger' %}
+                                    {% elseif getDecisionTypeName(decision.decisionType) == 'APPROVED' %}
+                                        {% set textClass = 'text-success' %}
+                                    {% elseif getDecisionTypeName(decision.decisionType) == 'MAYBE_APPROVED' %}
+                                        {% set textClass = 'text-warning' %}
+                                    {% else %}
+                                        {% set textClass = '' %}
+                                    {% endif %}
+                                    <span class="{{ textClass }}">{{ mapDecision(decision.decisionType) }}</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="box mt-15">
+                <div class="box-head" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4 class="title">Notlar</h4>
+                    <a href="javascript:void(0);" class="button button-sm button-box button-primary add-note-button" data-application-id="{{ application.id }}"><i class="ti-plus"></i></a>
+                </div>
+                {% if application.notes|length > 0 %}
+                <div class="box-body">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th>Not</th>
+                            <th class="text-right">Yazar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for note in application.notes %}
+                            <tr>
+                                <td style="white-space: normal">{{ note.content }}</td>
+                                <td class="text-right">
+                                    <span data-toggle="tooltip" data-title="{{ note.createdAt|date('Y-m-d H:i:s') }}">{{ note.user.username }}</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Modals -->
+    {% include 'admin/modal/new.note.html.twig' %}
+    <!-- Modals -->
+{% endblock %}
+{% block javascripts %}
+    <script src="/static/admin/assets/js/plugins/clipboard/clipboard.min.js"></script>
+    <script src="/static/admin/assets/js/plugins/clipboard/clipboard.active.js"></script>
+    <script>
+        let $addNoteBtn = $('a.add-note-button');
+        let $addNoteModal = $('#newNote');
+
+        $addNoteBtn.off('click');
+        $addNoteBtn.on('click', function(e){
+            let applicationId = $(this).data('application-id');
+            $addNoteModal.find('input[name="applicationId"]').val(applicationId);
+            $addNoteModal.modal('show');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% if activeRoute is not defined %}
+{% set activeRoute = null %}
+{% endif %}
+<div class="page-links d-flex">
+    <a href="{{ path('ticket_list') }}"{% if activeRoute == 'ticket_list' %} class="active"{% endif %}>Destek Talepleriniz</a>
+    <a href="{{ path('ticket_create') }}"{% if activeRoute == 'ticket_create' %} class="active"{% endif %}>Yeni Destek Talebi Oluştur</a>
+    <i class="flex-fill"></i>
+    <a href="{{ path('home') }}">Başvuru Sayfasına Dön</a>
+</div>

@@ -1,0 +1,80 @@
+version: "3.2"
+services:
+  phpmyadmin:
+    restart: always
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8002:80'
+    environment:
+      - PMA_HOST=db
+      - UPLOAD_LIMIT=50M
+    depends_on:
+      - db
+    networks:
+      - app_network
+  db:
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./docker/data/mysql:/var/lib/mysql:cached
+    image: mysql:8
+    ports:
+      - "8003:3306"
+    networks:
+      - app_network
+  php:
+    restart: always
+    build:
+      context: docker/images/php
+      args:
+        - HOST_UID=${HOST_UID}
+        - HOST_GID=${HOST_GID}
+    volumes:
+      - ./:/var/www/project:cached
+    env_file: '.env'
+    environment:
+      - APP_ENV=prod
+    depends_on:
+      - db
+    networks:
+      - app_network
+  php_dev:
+    restart: always
+    build:
+      context: docker/images/php
+      args:
+        - HOST_UID=${HOST_UID}
+        - HOST_GID=${HOST_GID}
+    ports:
+      - ${PHP_PORT}
+    volumes:
+      - ./:/var/www/project:cached
+    command: 'symfony server:start --no-tls'
+    env_file: '.env'
+    environment:
+      - APP_ENV=dev
+    depends_on:
+      - db
+    networks:
+      - app_network
+  nginx:
+    restart: always
+    build:
+      context: docker/images/nginx
+    ports:
+      - ${NGINX_PORT}
+    volumes:
+      - ./:/var/www/project:cached
+      - ./docker/logs/nginx:/var/log/nginx:cached
+    networks:
+      - app_network
+    depends_on:
+      - php
+networks:
+  app_network:
+    driver: bridge

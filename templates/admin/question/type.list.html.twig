@@ -1,0 +1,40 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Soru Tipi Listesi{% endblock %}
+{% block pageTitle %}Soru Tipi Listesi{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <div class="c-table-responsive@wide">
+                <table class="c-table">
+                    <thead class="c-table__head">
+                    <tr class="c-table__row">
+                        <th class="c-table__cell c-table__cell--head">Soru Tipi</th>
+                        <th class="c-table__cell c-table__cell--head">İşlemler</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for questionType in questionTypes %}
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">
+                                <div class="o-media">
+                                    <div class="o-media__body">
+                                        <h6>{{ questionType.name }}</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="c-table__cell">
+                                <a class="c-btn ctn-small" href="{{ path('question_type_edit', {'questionTypeId': questionType.id}) }}">Düzenle</a>
+                                <a class="c-btn ctn-small c-btn--danger" href="{{ path('question_type_delete', {'questionTypeId': questionType.id}) }}">Kaldır</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

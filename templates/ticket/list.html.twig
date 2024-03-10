@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kafi RP Ticket{% endblock %}
+
+{% block body %}
+    <div class="form-content flex-fill">
+        <div class="form-items" style="max-width: 100%">
+            <h3>KafiRP Destek</h3>
+            {% include 'ticket/_header.html.twig' with {activeRoute: 'ticket_list'} %}
+            {% if tickets|length > 0 %}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>ID</td>
+                            <td>Başlık</td>
+                            <td>Son Güncelleme</td>
+                            <td>Durum</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.id }}</td>
+                        <td><a href="{{ path('ticket_detail', {'ticketId': ticket.id}) }}">{{ ticket.title }}</a></td>
+                        <td>{{ ticket.updatedAt.format('Y-m-d H:i:s') }}</td>
+                        <td>{{ ticket.status == 1 ? '<span class="badge bg-danger">Kapalı</span>' : '<span class="badge bg-success">Açık</span>' }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <small>Son 20 destek talebiniz gösterilmektedir.</small>
+            {% else %}
+            <p>Destek talebiniz bulunmamaktadır.</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+
+    </script>
+{% endblock %}
